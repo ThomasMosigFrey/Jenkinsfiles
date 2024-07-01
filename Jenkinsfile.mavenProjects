@@ -17,7 +17,7 @@ pipeline {
     stages {
         stage ('checkouts') {
             steps {
-                checkout scmGit(branches: [[name: "${params.branch}" ]], extensions: [], userRemoteConfigs: [[credentialsId: '31e84b3b-289f-49b3-a4ac-c96c8d504138', url: "${params.Project}" ]])
+                checkout scmGit(branches: [[name: "${params.Branch}" ]], extensions: [], userRemoteConfigs: [[credentialsId: '31e84b3b-289f-49b3-a4ac-c96c8d504138', url: "${params.Project}" ]])
             }
         }
         stage('Compile/Test') {
