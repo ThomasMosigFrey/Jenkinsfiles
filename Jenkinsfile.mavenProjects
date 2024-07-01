@@ -1,7 +1,7 @@
 pipeline {
-    agent { label 'my-defined-label' }
+    agent any
 
-    triggers { upstream(upstreamProjects: 'testFreestyle', threshold: hudson.model.Result.SUCCESS) }
+    triggers { pollSCM('H/5 * * * *') }
 
     tools {
         maven 'maven3'
@@ -26,16 +26,12 @@ pipeline {
         }
         stage('Compile/Test') {
             steps {
-                sh 'env'
-                sh 'sleep 10'
-                echo 'running compiler'
-                echo 'running unit test'
-                echo 'save test artifacts'
+                sh 'mvn clean test'
             }
         }
         stage('Create binary artifact') {
             steps {
-                echo 'push to nexus'
+                echo 'mvn deploy'
             }
         }
     }
