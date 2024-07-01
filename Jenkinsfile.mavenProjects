@@ -1,0 +1,47 @@
+pipeline {
+    agent { label 'my-defined-label' }
+
+    triggers { upstream(upstreamProjects: 'testFreestyle', threshold: hudson.model.Result.SUCCESS) }
+
+    tools {
+        maven 'maven3'
+    }
+
+    options {
+        retry(3)
+        buildDiscarder logRotator(artifactDaysToKeepStr: '2', artifactNumToKeepStr: '3', daysToKeepStr: '2', numToKeepStr: '3')
+        lock(quantity: 3, resource: 'ThisProduct', resourceSelectStrategy: 'sequential')
+        timeout(activity: true, time: 30)
+    }
+
+    parameters {
+        string defaultValue: '*/master', name: 'branch', trim: true
+    }
+
+    stages {
+        stage ('checkouts') {
+            steps {
+                checkout scmGit(branches: [[name: "${params.branch}" ]], extensions: [], userRemoteConfigs: [[credentialsId: '31e84b3b-289f-49b3-a4ac-c96c8d504138', url: 'https://github.com/ThomasMosigFrey/FiExamples.git']])
+            }
+        }
+        stage('Compile/Test') {
+            steps {
+                sh 'env'
+                sh 'sleep 10'
+                echo 'running compiler'
+                echo 'running unit test'
+                echo 'save test artifacts'
+            }
+        }
+        stage('Create binary artifact') {
+            steps {
+                echo 'push to nexus'
+            }
+        }
+    }
+    post { 
+        success { 
+            echo 'Super! successfully done!!!'
+        }
+    }
+}
