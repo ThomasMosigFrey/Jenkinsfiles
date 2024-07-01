@@ -34,7 +34,7 @@ pipeline {
         }
         stage('Save binary artifacts') {
             steps {
-                withMaven(globalMavenSettingsConfig: '5a405c4e-b656-41ce-903a-b7e1d1909c7b', jdk: 'oracle_jdk_8', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
+                withMaven(globalMavenSettingsConfig: '5a405c4e-b656-41ce-903a-b7e1d1909c7b', maven: 'maven3', mavenSettingsConfig: '', traceability: true) {
                     sh 'mvn deploy'
                 }
             }
